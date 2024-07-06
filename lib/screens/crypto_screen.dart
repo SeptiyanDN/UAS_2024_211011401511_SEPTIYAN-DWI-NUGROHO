@@ -79,7 +79,7 @@ class _CryptoMarketPageState extends State<CryptoMarketPage> {
                           trailing: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('₹${price?.toStringAsFixed(2) ?? ''}'),
+                              Text('USD ${price?.toStringAsFixed(2) ?? ''}'),
                               Text(
                                 '${percentChange?.toStringAsFixed(2) ?? ''}%',
                                 style: TextStyle(
