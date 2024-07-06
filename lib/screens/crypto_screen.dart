@@ -1,8 +1,6 @@
-import 'package:crypto/cubits/crypto/crypto_cubit.dart';
-import 'package:flutter/material.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../cubits/crypto/crypto_cubit.dart';
 
 class CryptoMarketPage extends StatefulWidget {
   @override
@@ -22,13 +20,12 @@ class _CryptoMarketPageState extends State<CryptoMarketPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Crypto Market'),
+        title: Text('Crypto - UAS MP - SeptiyanDN'),
       ),
       body: <Widget>[
         BlocBuilder<CryptoCubit, CryptoState>(
           builder: (context, state) {
-
-            print('state: $state')
+            print('state: $state');
             if (state is CryptoLoading) {
               return Center(child: CircularProgressIndicator());
             } else if (state is CryptoLoaded) {
@@ -55,8 +52,8 @@ class _CryptoMarketPageState extends State<CryptoMarketPage> {
                       children: [
                         Text('Coins', style: TextStyle(fontSize: 18)),
                         DropdownButton<String>(
-                          value: 'INR',
-                          items: <String>['INR', 'USD'].map((String value) {
+                          value: 'USD',
+                          items: <String>['USD'].map((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: Text('Market - $value'),
@@ -72,6 +69,9 @@ class _CryptoMarketPageState extends State<CryptoMarketPage> {
                       itemCount: cryptos?.length ?? 0,
                       itemBuilder: (context, index) {
                         final crypto = cryptos![index];
+                        final price = double.tryParse(crypto.priceUsd ?? '');
+                        final percentChange =
+                            double.tryParse(crypto.percentChange24h ?? '');
                         return ListTile(
                           leading: Icon(Icons.account_balance_wallet),
                           title: Text(crypto.name ?? ''),
@@ -79,13 +79,12 @@ class _CryptoMarketPageState extends State<CryptoMarketPage> {
                           trailing: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(''),
+                              Text('₹${price?.toStringAsFixed(2) ?? ''}'),
                               Text(
-                                '${crypto.percentChange24h}%',
+                                '${percentChange?.toStringAsFixed(2) ?? ''}%',
                                 style: TextStyle(
-                                  color: double.tryParse(
-                                              crypto.percentChange24h ?? '') ??
-                                          0 >= 0
+                                  color: percentChange != null &&
+                                          percentChange >= 0
                                       ? Colors.green
                                       : Colors.red,
                                 ),
@@ -178,20 +177,6 @@ class _CryptoMarketPageState extends State<CryptoMarketPage> {
       ),
     );
   }
-}
-
-class Crypto {
-  final String name;
-  final String symbol;
-  final double price;
-  final double change;
-
-  Crypto({
-    required this.name,
-    required this.symbol,
-    required this.price,
-    required this.change,
-  });
 }
 
 class CustomNavigationBar extends StatefulWidget {
